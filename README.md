@@ -24,7 +24,9 @@
 ### 前端部分
 
 前端部分对应BookStore文件夹。基于vue框架实现页面的渲染。包括一个主页面和几个对话框组件，涉及组件之间的相互通信以及基于vue-reaource的http请求。
+
 ###后端部分
+
 后端部分对应BookStoreServer文件。
 首先假定本地已经安装mongodb软件，并使用默认端口打开。
 BookStoreServer是一个利用express生成器产生的工程文件。并安装了mongoose模块。在config文件夹下mongoose.js文件里边连接数据库。

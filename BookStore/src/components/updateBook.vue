@@ -26,6 +26,7 @@
               <input type="text" v-model="book.publisher"/>
             </div>
           </div>
+          <div class="g-form-error">{{errorText}}</div>
         </div>
       </div>
       <div class="g-dialog-foot">
@@ -53,22 +54,29 @@
       }
     },
     data: function () {
-      return {}
+      return {
+        errorText: ''
+      }
     },
     methods: {
       hideMySelf: function () {
         this.$emit('onCloseUpdateBookDialog')
       },
       confirm: function () {
+        let flag = this.book.name && this.book.author && this.book.publisher;
         let self = this;
-        this.$http.post('http://localhost:3000/updateBook', this.book)
-          .then(function (docs) {
-            this.hideMySelf();
-            self.$emit('updateBook', docs.body);
-            // console.log(docs.body);
-          }, function () {
-            console.log('failed')
-          })
+        if (flag) {
+          this.$http.post('http://localhost:3000/updateBook', this.book)
+            .then(function (docs) {
+              self.hideMySelf();
+              self.$emit('updateBook', docs.body);
+              // console.log(docs.body);
+            }, function () {
+              console.log('failed')
+            })
+        } else {
+          self.errorText = '以上三项为必填项，均不能为空'
+        }
       }
     }
   }

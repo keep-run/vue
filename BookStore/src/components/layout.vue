@@ -63,41 +63,54 @@
           {name: 'publisher', label: '出版社'}],
         tableData: [],
         targetBook: {},
-        searchKey:''
+        searchKey: ''
       }
     },
-    computed:{
+    computed: {
       filteredTableData: function () {
-        var self=this;
-        return this.tableData.filter(function(item){
-          return item.name.toLowerCase().indexOf(self.searchKey.toLocaleLowerCase())!==-1;
+        var self = this;
+        return this.tableData.filter(function (item) {
+          if (item.name) {
+            return item.name.toLowerCase().indexOf(self.searchKey.toLowerCase()) !== -1;
+          } else {
+            return true;
+          }
         })
       }
     },
     mounted: function () {
-      let self = this;
-      this.$http.get('http://localhost:3000/getBooks')
-        .then(function (res) {
-          //console.log(res);
-          self.tableData = res.data;
-        }, function (err) {
-          console.log(err);
-        })
-    },
+      this.getAllBooks()
+    }
+    ,
     methods: {
+      getAllBooks: function () {
+        let self = this;
+        this.$http.get('http://localhost:3000/getBooks')
+          .then(function (res) {
+            //console.log(res);
+            self.tableData = res.data;
+          }, function (err) {
+            console.log(err);
+          })
+      },
       hideAddBookDialog: function () {
         this.isShowAddBookDialog = false;
-      },
+      }
+      ,
       showAddBookDialog: function () {
         this.isShowAddBookDialog = true
-      },
+      }
+      ,
       hideUpdatedBookDialog: function () {
         this.isShowUpdateBookDialog = false;
-      },
+        this.getAllBooks();
+      }
+      ,
       updateView: function (bookList) {
-        this.searchKey='';
+        this.searchKey = '';
         this.tableData = bookList;
-      },
+      }
+      ,
       removeBook: function (index) {
         let self = this;
         let book = this.filteredTableData[index];
@@ -109,7 +122,8 @@
           }, function () {
             console.log('failed')
           });
-      },
+      }
+      ,
       updateBook: function (index) {
         this.isShowUpdateBookDialog = true;
         this.targetBook = this.filteredTableData[index];
@@ -150,6 +164,12 @@
     line-height: 30px;
     padding: 0 10px;
     border: 1px solid #ccc;
+  }
+
+  .g-form-error {
+    color: red;
+    text-align: center;
+    font-size: smaller;
   }
 
   .g-dialog-head {

@@ -26,6 +26,7 @@
               <input type="text" v-model="publisher"/>
             </div>
           </div>
+          <div class="g-form-error">{{errorText}}</div>
         </div>
       </div>
       <div class="g-dialog-foot">
@@ -52,7 +53,8 @@
       return {
         name: '',
         author: '',
-        publisher: ''
+        publisher: '',
+        errorText: ''
       }
     },
     methods: {
@@ -62,24 +64,26 @@
       confirm: function () {
         let self = this;
         let flag = this.name && this.author && this.publisher;
-        let book = {
-          name: this.name,
-          author: this.author,
-          publisher: this.publisher
-        };
+
         if (flag) {
-         // console.log('发送post请求');
+          let book = {
+            name: this.name,
+            author: this.author,
+            publisher: this.publisher
+          };
           this.$http.post('http://localhost:3000/addBook', book)
             .then(function (docs) {
               self.name = '';
               self.author = '';
               self.publisher = '';
               this.hideMySelf();
-              self.$emit('abbBook', docs.body);
+              self.$emit('addBook', docs.body);
               // console.log(docs.body);
             }, function () {
               console.log('failed')
             })
+        } else {
+          this.errorText = '以上三项为必填项，均不能为空';
         }
       }
     }
